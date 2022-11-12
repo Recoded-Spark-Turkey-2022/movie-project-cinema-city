@@ -21,6 +21,8 @@ const constructUrl = (path) => {
 // You may need to add to this function, definitely don't delete it.
 const movieDetails = async (movie) => {
   const movieRes = await fetchMovie(movie.id);
+  console.log(movieRes);
+  console.log(movie);
   renderMovie(movieRes);
 };
 
@@ -56,6 +58,7 @@ const renderMovies = (movies) => {
 
 // You'll need to play with this function in order to add features and enhance the style.
 const renderMovie = (movie) => {
+  console.log(movie.spoken_languages[0].english_name);
   CONTAINER.innerHTML = `
     <div class="row">
         <div class="col-md-4">
@@ -69,13 +72,15 @@ const renderMovie = (movie) => {
               movie.release_date
             }</p>
             <p id="movie-runtime"><b>Runtime:</b> ${movie.runtime} Minutes</p>
+            <p id="movie-language"><b>Language:</b> ${movie.spoken_languages[0].english_name}</p>
+            <p id="movie-production-company"><b>Production company:</b> ${movie.production_companies[0].name}</p>
             <h3>Overview:</h3>
             <p id="movie-overview">${movie.overview}</p>
         </div>
         </div>
             <h3>Actors:</h3>
             <ul id="actors" class="list-unstyled"></ul>
-    </div>`;
+      </div>`;
 };
 
 document.addEventListener("DOMContentLoaded", autorun);
