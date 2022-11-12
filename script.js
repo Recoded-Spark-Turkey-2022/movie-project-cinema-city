@@ -5,11 +5,12 @@ const PROFILE_BASE_URL = "http://image.tmdb.org/t/p/w185";
 const BACKDROP_BASE_URL = "http://image.tmdb.org/t/p/w780";
 const CONTAINER = document.querySelector(".main-container");
 const homeBtn = document.querySelector(".home-btn");
+const genreSection = document.querySelector(".genres");
 
 // Don't touch this function please
 const autorun = async () => {
   const movies = await fetchMovies();
-  console.log(movies.results);
+
   renderMovies(movies.results);
 };
 
@@ -33,6 +34,34 @@ const fetchMovies = async () => {
   return res.json();
 };
 
+const fetchGenreMovies = async (id) => {
+  const url = `${TMDB_BASE_URL}/discover/movie?api_key=${atob(
+    "NTQyMDAzOTE4NzY5ZGY1MDA4M2ExM2M0MTViYmM2MDI="
+  )}&with_genres=${id}`;
+
+  const res = await fetch(url);
+  const data = await res.json();
+  CONTAINER.innerHTML = "";
+  renderMovies(data.results);
+  return data;
+};
+const fetchGenreList = async () => {
+  const url = constructUrl("genre/movie/list");
+  const res = await fetch(url);
+  const data = await res.json();
+  data.genres;
+  data?.genres.forEach((genre) => {
+    const { id, name } = genre;
+    const optionforGenres = document.createElement("option");
+    optionforGenres.setAttribute("value", `${id}`);
+    optionforGenres.setAttribute("class", "dropdown-item");
+    optionforGenres.innerText = name;
+    genreSection.append(optionforGenres);
+  });
+  return data;
+};
+
+fetchGenreList();
 // Don't touch this function please. This function is to fetch one movie.
 const fetchMovie = async (movieId) => {
   const url = constructUrl(`movie/${movieId}`);
@@ -72,7 +101,8 @@ const renderMovie = (movie) => {
             }</p>
             <p id="movie-runtime"><b>Runtime:</b> ${movie.runtime} Minutes</p>
             <h3>Overview:</h3>
-            <p id="movie-overview">${movie.overview}</p>
+     
+    
         </div>
         </div>
             <h3>Actors:</h3>
@@ -83,9 +113,15 @@ const renderMovie = (movie) => {
 document.addEventListener("DOMContentLoaded", autorun);
 
 ///*Home Btn */
-console.log(homeBtn);
+
 homeBtn.addEventListener("click", () => {
   CONTAINER.innerHTML = "";
 
   autorun();
+});
+
+//*******displaying movies According to their Genres */
+genreSection.addEventListener("click", (e) => {
+  const genreId = e.target.value;
+  fetchGenreMovies(genreId);
 });
