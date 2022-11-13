@@ -105,3 +105,47 @@ outline: none !important;
     margin-top: 0 10px;
   }
 }
+
+
+/*Icon Button*/
+
+.icon-position{
+  position: fixed;
+  bottom: 40px;
+  right:10px;
+  z-index: 20;
+}
+.scroll-icon{
+  display: none;
+  background-color: #333333;
+  /* border: 1px solid #fff; */
+  border-radius: 50%;
+  height: 40px;
+  width: 40px;
+  color: #fff;
+  cursor: pointer;
+  animation: movebtn 3s ease-in-out infinite;
+  transition: all .5s ease-in-out;
+}
+.scroll-icon:hover{
+  animation: none;
+  background: #1E1E1E;
+  color:#FD6500;
+
+}
+@keyframes movebtn {
+  0%{
+    transform: translateY(0px);
+  }
+  25%{
+    transform: translateY(30px);
+  }
+
+  
+  100%{
+    transform: translateY(0px);
+  }
+}
+.active{
+  display:block;
+}

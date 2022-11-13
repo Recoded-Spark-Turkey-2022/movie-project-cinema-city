@@ -5,8 +5,11 @@ const PROFILE_BASE_URL = "http://image.tmdb.org/t/p/w185";
 const BACKDROP_BASE_URL = "http://image.tmdb.org/t/p/w780";
 const CONTAINER = document.querySelector(".main-container");
 const homeBtn = document.querySelector(".home-btn");
+const actorBtn = document.querySelector(".actor-btn");
 const genreSection = document.querySelector(".genres");
-
+const formBox = document.querySelector(".formBox");
+const formInput = document.querySelector(".form-control");
+const scrollIcon = document.querySelector(".scroll-icon");
 // Don't touch this function please
 const autorun = async () => {
   const movies = await fetchMovies();
@@ -34,6 +37,7 @@ const fetchMovies = async () => {
   return res.json();
 };
 
+//******GENRES */
 const fetchGenreMovies = async (id) => {
   const url = `${TMDB_BASE_URL}/discover/movie?api_key=${atob(
     "NTQyMDAzOTE4NzY5ZGY1MDA4M2ExM2M0MTViYmM2MDI="
@@ -60,8 +64,19 @@ const fetchGenreList = async () => {
   });
   return data;
 };
-
 fetchGenreList();
+//*******GENRES */
+
+//popularity.desc => list according to popularity
+
+//primary_release_date.desc => get latest movies
+//topRated  => top_rated
+//popular => popular
+//upcoming=> upcoming
+//now playing=> now_playing
+
+//******Search Actor */
+
 // Don't touch this function please. This function is to fetch one movie.
 const fetchMovie = async (movieId) => {
   const url = constructUrl(`movie/${movieId}`);
@@ -84,6 +99,8 @@ const renderMovies = (movies) => {
     CONTAINER.appendChild(movieDiv);
   });
 };
+
+//******Rendering ActorDetailspage */
 
 // You'll need to play with this function in order to add features and enhance the style.
 const renderMovie = (movie) => {
@@ -125,3 +142,12 @@ genreSection.addEventListener("click", (e) => {
   const genreId = e.target.value;
   fetchGenreMovies(genreId);
 });
+
+const goToTop = () => {
+  window.scrollTo({
+    top: 0,
+    behavior: "smooth",
+  });
+};
+
+scrollIcon.addEventListener("click", goToTop);
