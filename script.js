@@ -21,10 +21,10 @@ const constructUrl = (path) => {
 // You may need to add to this function, definitely don't delete it.
 const movieDetails = async (movie) => {
   const movieRes = await fetchMovie(movie.id);
-  console.log(movieRes);
-  console.log(movie);
-  renderMovie(movieRes);
+  const credits= await fetchActors(movie.id);
+  renderMovie(movieRes,credits);
 };
+
 
 // This function is to fetch movies. You may need to add it or change some part in it in order to apply some of the features.
 const fetchMovies = async () => {
@@ -39,6 +39,12 @@ const fetchMovie = async (movieId) => {
   const res = await fetch(url);
   return res.json();
 };
+  //fetch the actors :
+  const fetchActors= async (movieId) => {
+    const url = constructUrl(`movie/${movieId}/credits`);
+    const res = await fetch(url);
+    return res.json();
+  };
 
 // You'll need to play with this function in order to add features and enhance the style.
 const renderMovies = (movies) => {
@@ -57,8 +63,12 @@ const renderMovies = (movies) => {
 };
 
 // You'll need to play with this function in order to add features and enhance the style.
-const renderMovie = (movie) => {
-  console.log(movie.spoken_languages[0].english_name);
+const renderMovie = (movie,credits) => {
+  const fiveAcrtors=[];
+  for (let i=0;i<=4;i++){fiveAcrtors.push(` ${credits.cast[i].name}`);};
+  const director=credits.crew.filter(person=>{return (person.job==='Director')});
+  console.log(director)
+ 
   CONTAINER.innerHTML = `
     <div class="row">
         <div class="col-md-4">
@@ -72,14 +82,20 @@ const renderMovie = (movie) => {
               movie.release_date
             }</p>
             <p id="movie-runtime"><b>Runtime:</b> ${movie.runtime} Minutes</p>
-            <p id="movie-language"><b>Language:</b> ${movie.spoken_languages[0].english_name}</p>
-            <p id="movie-production-company"><b>Production company:</b> ${movie.production_companies[0].name}</p>
+            <p id="movie-language"><b>Language:</b>${movie.spoken_languages.map((singleLanguge) => ` ${singleLanguge.english_name}`)}</p>
+            <p id="movie-production-company"><b>Production companies:</b> ${movie.production_companies.map((company)=>` ${company.name}`)}</p>
             <h3>Overview:</h3>
             <p id="movie-overview">${movie.overview}</p>
         </div>
         </div>
             <h3>Actors:</h3>
-            <ul id="actors" class="list-unstyled"></ul>
+            <ul id="actors" class="list-unstyled">
+              <p> ${fiveAcrtors}</p>
+            </ul>
+            <h3>Director:</h3>
+            <ul id="actors" class="list-unstyled">
+              <p> ${director[0].name}</p>
+            </ul>
       </div>`;
 };
 
