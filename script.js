@@ -143,6 +143,13 @@ genreSection.addEventListener("click", (e) => {
   fetchGenreMovies(genreId);
 });
 
+window.addEventListener("scroll", () => {
+  if (window.scrollY > 400) {
+    scrollIcon.classList.add("active");
+  } else {
+    scrollIcon.classList.add("active");
+  }
+});
 const goToTop = () => {
   window.scrollTo({
     top: 0,
