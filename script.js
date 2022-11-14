@@ -5,7 +5,7 @@ const PROFILE_BASE_URL = "http://image.tmdb.org/t/p/w185";
 const BACKDROP_BASE_URL = "http://image.tmdb.org/t/p/w780";
 const CONTAINER = document.querySelector(".main-container");
 const homeBtn = document.querySelector(".home-btn");
-const homePage = document.querySelector(".home-page");
+
 const actorBtn = document.querySelector(".actor-btn");
 const genreSection = document.querySelector(".genres");
 const formBox = document.querySelector(".formBox");
@@ -107,9 +107,12 @@ const fetchTrailer = async (movieId) => {
 
 // You'll need to play with this function in order to add features and enhance the style.
 const renderMovies = (movies) => {
+  const rowDiv = document.createElement("div");
+  rowDiv.setAttribute("class", "row");
   movies?.map((movie) => {
     const mainPageDiv = document.createElement("div");
-    mainPageDiv.setAttribute('class','col-md-3  col-sm-12');
+
+    mainPageDiv.setAttribute("class", "col-sm-12 col-md-6 col-lg-3");
     mainPageDiv.innerHTML = `
     <div class="card mb-4" style="height:28em;">
     <img src="${BACKDROP_BASE_URL + movie.backdrop_path}" alt="${
@@ -118,14 +121,17 @@ const renderMovies = (movies) => {
   <div class="card-body">
 
   <h3 class="card-title text-black">${movie.title}</h3>
-     <div class="truncate-text"> <p class="card-text">${movie.overview}</p></div>
+     <div class="truncate-text"> <p class="card-text">${
+       movie.overview
+     }</p></div>
      <div class="mt-3 text-end"><b>Rating:</b> ${movie.vote_average}/10</div>
   </div>
 </div>`;
-mainPageDiv.addEventListener("click", () => {
+    mainPageDiv.addEventListener("click", () => {
       movieDetails(movie);
     });
-    homePage.appendChild(mainPageDiv);
+    rowDiv.append(mainPageDiv);
+    CONTAINER.appendChild(rowDiv);
   });
 };
 
@@ -136,7 +142,7 @@ const renderRelatedMovies = (movies) => {
   movies.map((movie) => {
     const relatedDiv = document.getElementById("relatedmovies");
     const movieDiv = document.createElement("div");
-    movieDiv.setAttribute('class','col');
+    movieDiv.setAttribute("class", "col");
     movieDiv.innerHTML = `
         <img src="${BACKDROP_BASE_URL + movie.backdrop_path}" alt="${
       movie.title
@@ -150,88 +156,83 @@ const renderRelatedMovies = (movies) => {
 };
 
 //******search function:******//
-let i=1;
-const fetchSearchResults = async (searchWord,i) => {
-
+let i = 1;
+const fetchSearchResults = async (searchWord, i) => {
   const url = `${constructUrl(`search/multi`)}&query=${searchWord}&page=${i}`;
   const res = await fetch(url);
-  const searchRes= await res.json();
-  const movieRes=searchRes.results.filter(e=>e.media_type==='movie');
-  const personRes=searchRes.results.filter(e=>e.media_type==='person');
-  renderSearch(movieRes,personRes);  
+  const searchRes = await res.json();
+  const movieRes = searchRes.results.filter((e) => e.media_type === "movie");
+  const personRes = searchRes.results.filter((e) => e.media_type === "person");
+  renderSearch(movieRes, personRes);
 };
 //search event listener:
 let searchWord;
-const searchBar=document.getElementById('search-bar');
-searchBar.addEventListener('submit',e=>
-{e.preventDefault();
-   searchWord= e.target[0].value;
-fetchSearchResults(searchWord);
-})
+const searchBar = document.getElementById("search-bar");
+searchBar.addEventListener("submit", (e) => {
+  e.preventDefault();
+  searchWord = e.target[0].value;
+  fetchSearchResults(searchWord);
+});
 //
 
-const renderSearch=(movies,persons)=>{
-   CONTAINER.innerHTML=`
+const renderSearch = (movies, persons) => {
+  CONTAINER.innerHTML = `
 <div class='row' id='search-container'>
 <h2> Search Results:</h2>`;
-const searchContainer=document.getElementById('search-container');
+  const searchContainer = document.getElementById("search-container");
 
-const next=document.createElement('button');
-next.innerText='next';
+  const next = document.createElement("button");
+  next.innerText = "next";
 
-const pre=document.createElement('button');
-pre.innerText='pre';
+  const pre = document.createElement("button");
+  pre.innerText = "pre";
 
-if(i===1){pre.disabled=true};
-searchContainer.append(next,pre);
-next.addEventListener('click',function() {
-  i+=1;
-  fetchSearchResults(searchWord,i);
-})
-pre.addEventListener('click',function() {
-  i-=1;
-  fetchSearchResults(searchWord,i);
-})
+  if (i === 1) {
+    pre.disabled = true;
+  }
+  searchContainer.append(next, pre);
+  next.addEventListener("click", function () {
+    i += 1;
+    fetchSearchResults(searchWord, i);
+  });
+  pre.addEventListener("click", function () {
+    i -= 1;
+    fetchSearchResults(searchWord, i);
+  });
 
-
-renderNewSearch(movies,persons);
-
-}
+  renderNewSearch(movies, persons);
+};
 //render search
-const renderNewSearch = (movies,persons) => {
- 
-  const searchContainer=document.getElementById('search-container');
-  persons.forEach(person=>{
+const renderNewSearch = (movies, persons) => {
+  const searchContainer = document.getElementById("search-container");
+  persons.forEach((person) => {
     const resDiv = document.createElement("div");
-    resDiv.setAttribute('class','col-md-6');
+    resDiv.setAttribute("class", "col-md-6");
     resDiv.innerHTML = `
   <h6 class="">${person.name}</h6>
   <img src="${BACKDROP_BASE_URL + person.profile_path}" alt="${
-    person.name
-  } profile" width='150'>
+      person.name
+    } profile" width='150'>
      `;
-     // should add link to actor profile: resDiv.addEventListener("click", () => {})
-     searchContainer.append(resDiv);})
-  movies.forEach(movie=>{
+    // should add link to actor profile: resDiv.addEventListener("click", () => {})
+    searchContainer.append(resDiv);
+  });
+  movies.forEach((movie) => {
     const resDiv = document.createElement("div");
-    resDiv.setAttribute('class','col-md-6');
+    resDiv.setAttribute("class", "col-md-6");
     resDiv.innerHTML = `
   <h6 class="">${movie.title}</h6>
   <img src="${BACKDROP_BASE_URL + movie.backdrop_path}" alt="${
-    movie.title
-  } poster" width='150'>
+      movie.title
+    } poster" width='150'>
      `;
-     resDiv.addEventListener("click", () => {
-    movieDetails(movie);})
-    searchContainer.append(resDiv);})
+    resDiv.addEventListener("click", () => {
+      movieDetails(movie);
+    });
+    searchContainer.append(resDiv);
+  });
   //
- 
-
-
-  
-  
 };
-
 
 //******search function:******//
 // You'll need to play with this function in order to add features and enhance the style.
