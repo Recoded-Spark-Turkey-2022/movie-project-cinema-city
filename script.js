@@ -5,6 +5,7 @@ const PROFILE_BASE_URL = "http://image.tmdb.org/t/p/w185";
 const BACKDROP_BASE_URL = "http://image.tmdb.org/t/p/w780";
 const CONTAINER = document.querySelector(".main-container");
 const homeBtn = document.querySelector(".home-btn");
+const homePage = document.querySelector(".home-page");
 const actorBtn = document.querySelector(".actor-btn");
 const genreSection = document.querySelector(".genres");
 const formBox = document.querySelector(".formBox");
@@ -107,16 +108,24 @@ const fetchTrailer = async (movieId) => {
 // You'll need to play with this function in order to add features and enhance the style.
 const renderMovies = (movies) => {
   movies?.map((movie) => {
-    const movieDiv = document.createElement("div");
-    movieDiv.innerHTML = `
-        <img src="${BACKDROP_BASE_URL + movie.backdrop_path}" alt="${
+    const mainPageDiv = document.createElement("div");
+    mainPageDiv.setAttribute('class','col-md-3  col-sm-12');
+    mainPageDiv.innerHTML = `
+    <div class="card mb-4" style="height:28em;">
+    <img src="${BACKDROP_BASE_URL + movie.backdrop_path}" alt="${
       movie.title
     } poster">
-        <h3>${movie.title}</h3>`;
-    movieDiv.addEventListener("click", () => {
+  <div class="card-body">
+
+  <h3 class="card-title text-black">${movie.title}</h3>
+     <div class="truncate-text"> <p class="card-text">${movie.overview}</p></div>
+     <div class="mt-3 text-end"><b>Rating:</b> ${movie.vote_average}/10</div>
+  </div>
+</div>`;
+mainPageDiv.addEventListener("click", () => {
       movieDetails(movie);
     });
-    CONTAINER.appendChild(movieDiv);
+    homePage.appendChild(mainPageDiv);
   });
 };
 
