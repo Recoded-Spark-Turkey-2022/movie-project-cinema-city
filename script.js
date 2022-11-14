@@ -30,7 +30,14 @@ const movieDetails = async (movie) => {
   const credits = await fetchActors(movie.id);
   const related = await fetchRelatedMovies(movie.id);
   const trailer = await fetchTrailer(movie.id);
-  renderMovie(movieRes, credits, related.results, trailer.results[0].key);
+  const images = await fetchImages(movie.id);
+  renderMovie(
+    movieRes,
+    credits,
+    related.results,
+    trailer.results[0].key,
+    images
+  );
 };
 
 // This function is to fetch movies. You may need to add it or change some part in it in order to apply some of the features.
@@ -101,6 +108,11 @@ const fetchActors = async (movieId) => {
 //fetch trailer:
 const fetchTrailer = async (movieId) => {
   const url = constructUrl(`movie/${movieId}/videos`);
+  const res = await fetch(url);
+  return res.json();
+};
+const fetchImages = async (movieId) => {
+  const url = constructUrl(`movie/${movieId}/images`);
   const res = await fetch(url);
   return res.json();
 };
@@ -236,8 +248,10 @@ const renderNewSearch = (movies, persons) => {
 
 //******search function:******//
 // You'll need to play with this function in order to add features and enhance the style.
-const renderMovie = (movie, credits, related, trailerKey) => {
+const renderMovie = (movie, credits, related, trailerKey, images) => {
+  console.log(movie);
   // actors:
+
   const fiveAcrtors = [];
   for (let i = 0; i <= 4; i++) {
     fiveAcrtors.push(` ${credits.cast[i].name}`);
@@ -254,32 +268,56 @@ const renderMovie = (movie, credits, related, trailerKey) => {
 
   CONTAINER.innerHTML = `
     <div class="row">
-        <div class="col-md-4">
+        <div class="col-sm-12 col-lg-8">
+         
              <img id="movie-backdrop" src=${
-               BACKDROP_BASE_URL + movie.backdrop_path
+               BACKDROP_BASE_URL + images.backdrops[2].file_path
              }>
-             <p> <b>Rating:</b> ${movie.vote_average}/10</p>
-             <p> <b>votes:</b> ${movie.vote_count}</p>
+      
 
            
         </div>
-        <div class="col-md-4">
+        <div  class="movie-detail col-sm-12  col-lg-4">
             
-            <h2 id="movie-title">${movie.title}</h2>
+        <img id="movie-backdrop" class="mb-4" src=${
+          BACKDROP_BASE_URL + images.logos[0].file_path
+        }>
+<div>
+<p  id="movie-release-date"><i class="fa-solid fa-calendar-days"></i> ${
+    movie.release_date
+  }  <span class="popUp-info">Release Date</span></p>
 
-            <p id="movie-release-date"><b>Release Date:</b> ${
-              movie.release_date
-            }</p>
-            <p id="movie-runtime"><b>Runtime:</b> ${movie.runtime} Minutes</p>
-            <p id="movie-language"><b>Language:</b>${movie.spoken_languages.map(
-              (singleLanguge) => ` ${singleLanguge.english_name}`
-            )}</p>
-            <p> <b>Production companies:</b><ul id="movie-production-company"></ul></p>
+<p id="movie-runtime"><i class="fa-solid fa-clock"></i> ${
+    movie.runtime
+  } Minutes 
+<span class="popUp-info">Run Time</span>
+</p>
+<p id="movie-language"><i class="fa-solid fa-language"></i>${movie.spoken_languages.map(
+    (singleLanguge) => ` ${singleLanguge.english_name}`
+  )}
+<span class="popUp-info">Languages</span>
+</p>
 
+<p id="movie-rating"> <i class="fa-solid fa-star"></i> ${
+    movie.vote_average
+  }/10  <span class="popUp-info">Rating</span> </p>
+<p id="movie-count"> <i class="fa-solid fa-person-booth"></i> ${
+    movie.vote_count
+  } 
+<span class="popUp-info">Number of Votes</span>
+</p>
+</div>
+           
 
+  <a id="imdb-icon" href="https://www.imdb.com/title/${
+    movie.imdb_id
+  }"  target="_blank"> <i class="fa-brands fa-imdb"></i>
+          
+            </a>
+            
             
         </div>
-        <div class="col-md-4">
+        <div class="col-12 mt-4">
         <h3>Overview:</h3>
         <p id="movie-overview">${movie.overview}</p>
         <h5>Actors:</h5>
@@ -288,9 +326,10 @@ const renderMovie = (movie, credits, related, trailerKey) => {
         </ul>
         <h5>Director:</h5>
           <p> ${director[0].name}</p>
+          <p> <b>Production companies:</b><ul id="movie-production-company"></ul></p>
         </div>
-        <div id='trailer'>
-            <iframe id="ytplayer" type="text/html" width="640" height="360"
+        <div class="col-12" id='trailer'>
+            <iframe id="ytplayer" type="text/html" width="100%" height="360"
             src="https://www.youtube.com/embed/${trailerKey}?autoplay=1"
             frameborder="0"></iframe>
         </div>
@@ -300,10 +339,11 @@ const renderMovie = (movie, credits, related, trailerKey) => {
         </div>
 
       </div>`;
+  console.log(companies);
   companies.forEach((com) => {
     const company = document.getElementById("movie-production-company");
     let li = document.createElement("li");
-    li.innerHTML = `${com[0]} <img src="${PROFILE_BASE_URL}${com[1]}" alt="" height="18">`;
+    li.innerHTML = `${com[0]} <img  src="${PROFILE_BASE_URL}${com[1]}" alt="" height="18">`;
     company.append(li);
   });
 

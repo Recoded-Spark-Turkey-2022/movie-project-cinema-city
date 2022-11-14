@@ -272,3 +272,99 @@ outline: none !important;
   right: 0;
 }
 /* card text end*/
+
+
+/*InnerPage styling*/
+
+#trailer iframe{
+  width: 100%;
+  border-radius: 10px;
+ 
+}
+
+.popUp-info{
+  position: absolute;
+  background-color: #fdfdfd;
+  padding: 2px 10px;
+  border-radius: 20px;
+  color:#1E1E1E;
+  left:30px;
+  bottom:-30px;
+  display: none;
+  transition: all 0.4s ease;
+  z-index: 10;
+  
+}
+
+
+#movie-release-date,#movie-runtime,#movie-language,#movie-rating,#movie-count{
+  position: relative;
+  cursor: pointer;
+  transition: all 0.4s ease;
+}
+#movie-count:hover .popUp-info{
+  display: block;
+}
+#movie-rating:hover .popUp-info{
+  display: block;
+}
+#movie-language:hover .popUp-info{
+display: block;
+}
+#movie-runtime:hover .popUp-info{
+  display: block;
+}
+#movie-release-date:hover .popUp-info{
+  display: block;
+}
+#imdb-icon{
+  color:#E2B616 !important;
+  display: block;
+
+  filter:brightness(70%);
+  transition: filter 0.4s ease;
+
+}
+#imdb-icon:hover{
+  filter:brightness(100%);
+}
+#imdb-icon i{
+font-size: 50px;
+}
+#movie-production-company{
+  list-style-type: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+
+}
+#movie-production-company li{
+  background-color: #737373;
+  color: #bbb;
+  padding:5px 15px;
+  border-radius: 10px;
+}
+
+@media (max-width:992px){
+  
+  .movie-detail{
+  display: flex;
+  margin-top: 40px;
+  }
+  .movie-detail img{
+width: 300px !important;
+  }
+}
+@media (max-width:768px){
+  
+  .movie-detail{
+  display: flex;
+  flex-direction: column;
+  margin-top: 40px;
+  }
+  .movie-detail img{
+width: 100% !important;
+  }
+}
