@@ -141,8 +141,10 @@ const renderRelatedMovies = (movies) => {
 };
 
 //******search function:******//
-const fetchSearchResults = async (searchWord) => {
-  const url = `${constructUrl(`search/multi`)}&query=${searchWord}&page=1`;
+let i=1;
+const fetchSearchResults = async (searchWord,i) => {
+
+  const url = `${constructUrl(`search/multi`)}&query=${searchWord}&page=${i}`;
   const res = await fetch(url);
   const searchRes= await res.json();
   const movieRes=searchRes.results.filter(e=>e.media_type==='movie');
@@ -150,18 +152,46 @@ const fetchSearchResults = async (searchWord) => {
   renderSearch(movieRes,personRes);  
 };
 //search event listener:
+let searchWord;
 const searchBar=document.getElementById('search-bar');
 searchBar.addEventListener('submit',e=>
 {e.preventDefault();
-   let searchWord= e.target[0].value;
+   searchWord= e.target[0].value;
 fetchSearchResults(searchWord);
 })
+//
 
+const renderSearch=(movies,persons)=>{
+   CONTAINER.innerHTML=`
+<div class='row' id='search-container'>
+<h2> Search Results:</h2>`;
+const searchContainer=document.getElementById('search-container');
+
+const next=document.createElement('button');
+next.innerText='next';
+
+const pre=document.createElement('button');
+pre.innerText='pre';
+
+if(i===1){pre.disabled=true};
+searchContainer.append(next,pre);
+next.addEventListener('click',function() {
+  i+=1;
+  fetchSearchResults(searchWord,i);
+})
+pre.addEventListener('click',function() {
+  i-=1;
+  fetchSearchResults(searchWord,i);
+})
+
+
+renderNewSearch(movies,persons);
+
+}
 //render search
-const renderSearch = (movies,persons) => {
-  CONTAINER.innerHTML="<div class='row' id='search-container'><h2> Search Results:</h2></div>";
+const renderNewSearch = (movies,persons) => {
+ 
   const searchContainer=document.getElementById('search-container');
-  console.log(searchContainer)
   persons.forEach(person=>{
     const resDiv = document.createElement("div");
     resDiv.setAttribute('class','col-md-6');
@@ -185,6 +215,11 @@ const renderSearch = (movies,persons) => {
      resDiv.addEventListener("click", () => {
     movieDetails(movie);})
     searchContainer.append(resDiv);})
+  //
+ 
+
+
+  
   
 };
 
