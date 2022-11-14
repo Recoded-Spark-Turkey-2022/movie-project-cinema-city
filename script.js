@@ -215,16 +215,29 @@ const renderNewSearch = (movies,persons) => {
      resDiv.addEventListener("click", () => {
     movieDetails(movie);})
     searchContainer.append(resDiv);})
-  //
- 
-
-
-  
-  
 };
+//END search function:******//
+//****filter function */
+const filterSection=document.querySelector('.filter');
+const filterFunc= async  (e) => {
+  if (e.target.value==='latest'){
+    const url=`${constructUrl('discover/movie')}&sort_by=primary_release_date.desc&primary_release_year=2022`;
+    console.log(url)
+    const res = await fetch(url);
+    const movies=await res.json();
+    CONTAINER.innerHTML = "";
+    renderMovies(movies.results);
+  return }
+     const url=constructUrl(`movie/${e.target.value}`);
+     const res = await fetch(url);
+     const movies=await res.json();
+     CONTAINER.innerHTML = "";
+     renderMovies(movies.results);
+
+    }
+filterSection.addEventListener('click',filterFunc);
 
 
-//******search function:******//
 // You'll need to play with this function in order to add features and enhance the style.
 const renderMovie = (movie, credits, related, trailerKey) => {
   // actors:
