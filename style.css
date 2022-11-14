@@ -2,6 +2,11 @@
   box-sizing: border-box;
 }
 body{
+  background: linear-gradient(rgba(0, 0, 0, 0.9), rgba(0, 0, 0, 0.75)), url(street.jpg);
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-attachment: fixed;
   background-color: #1E1E1E;
   color:#ababab;
 }
@@ -85,12 +90,7 @@ body{
   text-transform: uppercase;
 
 }
-/* main page*/
-img {
-  border-radius: 9px;
-}
 
-/* end of main page*/
 /* footer starts*/
 
 .site-footer
@@ -262,6 +262,14 @@ outline: none !important;
   overflow: hidden;
 }
 
+.card {
+  border: solid 3px #FD6500;
+}
+
+.card:hover{
+  transform: scale(1.08);
+  cursor: pointer;
+}
 .truncate-text::after {
   content: "";
   background: linear-gradient(to right, rgba(255,255,255,0) 0%, rgba(255,255,255,1) 100%);
@@ -272,6 +280,7 @@ outline: none !important;
   right: 0;
 }
 /* card text end*/
+
 
 
 /*InnerPage styling*/
@@ -368,3 +377,4 @@ width: 300px !important;
 width: 100% !important;
   }
 }
+
