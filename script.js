@@ -249,7 +249,6 @@ const renderNewSearch = (movies, persons) => {
 //******search function:******//
 // You'll need to play with this function in order to add features and enhance the style.
 const renderMovie = (movie, credits, related, trailerKey, images) => {
-  console.log(movie);
   // actors:
 
   const fiveAcrtors = [];
@@ -339,7 +338,7 @@ const renderMovie = (movie, credits, related, trailerKey, images) => {
         </div>
 
       </div>`;
-  console.log(companies);
+
   companies.forEach((com) => {
     const company = document.getElementById("movie-production-company");
     let li = document.createElement("li");
