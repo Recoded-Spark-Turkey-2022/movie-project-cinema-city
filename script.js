@@ -124,7 +124,7 @@ const renderMovies = (movies) => {
      <div class="truncate-text"> <p class="card-text">${
        movie.overview
      }</p></div>
-     <div class="mt-3 text-end"><b>Rating:</b> ${movie.vote_average}/10</div>
+     <div class="mt-3 text-end">Rating: <b>${movie.vote_average}</b> /10</div>
   </div>
 </div>`;
     mainPageDiv.addEventListener("click", () => {
