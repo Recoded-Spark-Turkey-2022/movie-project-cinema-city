@@ -35,7 +35,7 @@ const movieDetails = async (movie) => {
     movieRes,
     credits,
     related.results,
-    trailer.results[0].key,
+    trailer?.results[0].key,
     images
   );
 };
@@ -127,10 +127,14 @@ const renderMovies = (movies) => {
     mainPageDiv.setAttribute("class", "col-sm-12 col-md-6 col-lg-3");
     mainPageDiv.innerHTML = `
     <div class="card mb-4" style="height:28em;">
-    <img src="${BACKDROP_BASE_URL + movie.backdrop_path}" alt="${
-      movie.title
-    } poster">
-  <div class="card-body">
+    <img src="${
+      movie.backdrop_path
+        ? BACKDROP_BASE_URL + movie.backdrop_path
+        : "./assets/movie-poster.png"
+    }" alt="${movie.title} poster" style=${
+      !movie.backdrop_path ? "max-height:150px;object-fit:contain;" : null
+    }>
+  <div class="card-body >
 
   <h3 class="card-title text-black">${movie.title}</h3>
      <div class="truncate-text"> <p class="card-text">${
@@ -154,14 +158,14 @@ const fetchActorsMovies = async (person_id) => {
   return res.json();
 };
 
-
 //******Rendering ActorDetailspage */
-actorBtn.addEventListener('click',(e)=>{
-  e.preventDefault()
+actorBtn.addEventListener("click", (e) => {
+  e.preventDefault();
   CONTAINER.innerHTML = ``;
-  
+
   const url = constructUrl(`person/popular`);
   fetch(url)
+
   .then(res =>res.json())
   .then(data => {
   const rowDiv = document.createElement("div");
@@ -176,18 +180,24 @@ actorBtn.addEventListener('click',(e)=>{
       actorDiv.setAttribute("class", "col-sm-12 col-md-6 col-lg-3")
 
       actorDiv.innerHTML = `
+
       <div class="card mb-4" style="height:38em;">
       <img src="${BACKDROP_BASE_URL + actorBlock.profile_path}" alt="${
-        actorBlock.name
-      } actor">
+            actorBlock.name
+          } actor">
       <div class="card-body">
   
       <h3 class="card-title text-black">${actorBlock.name}</h3>
-        <div class="mt-3 text-start">Gender: <b>${(actorBlock.gender === 1) ? "Female":"Male"}</b> </div>
-        <div class="mt-3 text-start">Popularity: <b>${actorBlock.popularity}</b></div>
+        <div class="mt-3 text-start">Gender: <b>${
+          actorBlock.gender === 1 ? "Female" : "Male"
+        }</b> </div>
+        <div class="mt-3 text-start">Popularity: <b>${
+          actorBlock.popularity
+        }</b></div>
 
       </div>
     </div>`;
+
       actorDiv.addEventListener("click", async() => {
           const fetchedActorMovies = await fetchActorsMovies(actorBlock.id)
           CONTAINER.innerHTML= ""
@@ -201,6 +211,7 @@ actorBtn.addEventListener('click',(e)=>{
 })
 
 })
+
 
 // render related movies:
 const renderRelatedMovies = (movies) => {
@@ -241,11 +252,17 @@ searchBar.addEventListener("submit", (e) => {
 //
 
 const renderSearch = (movies, persons) => {
-  CONTAINER.innerHTML = `
-<div class='row' id='search-container'>
-<h2> Search Results:</h2>`;
-  const searchContainer = document.getElementById("search-container");
+  const searchContainer = document.createElement("div");
+  const searchHeader = document.createElement("h2");
+  searchHeader.setAttribute("id", "search-header");
+  searchHeader.innerText = "Search Result";
+  searchContainer.append(searchHeader);
+  searchContainer.setAttribute("id", "search-container");
 
+  //const searchContainer = document.getElementById("search-container");
+  const parentButton = document.createElement("section");
+  parentButton.setAttribute("id", "parent-Button");
+  // parentButton.style.cssText = ";display: flex;justify-content: space-between;";
   const next = document.createElement("button");
   next.innerText = "next";
 
@@ -255,7 +272,8 @@ const renderSearch = (movies, persons) => {
   if (i === 1) {
     pre.disabled = true;
   }
-  searchContainer.append(next, pre);
+  parentButton.append(next, pre);
+  searchContainer.append(parentButton);
   next.addEventListener("click", function () {
     i += 1;
     fetchSearchResults(searchWord, i);
@@ -265,35 +283,53 @@ const renderSearch = (movies, persons) => {
     fetchSearchResults(searchWord, i);
   });
 
-  renderNewSearch(movies, persons);
+  renderNewSearch(movies, persons, searchContainer);
 };
 //render search
-const renderNewSearch = (movies, persons) => {
-  const searchContainer = document.getElementById("search-container");
+const renderNewSearch = (movies, persons, container) => {
+  // const searchContainer = document.getElementById("search-container");
+  console.log(container);
+  const rowDiv = document.createElement("div");
+  rowDiv.setAttribute("class", "row");
   persons.forEach((person) => {
     const resDiv = document.createElement("div");
-    resDiv.setAttribute("class", "col-md-6");
+    resDiv.setAttribute("class", "single-item col-sm-12 col-md-6 col-lg-4");
     resDiv.innerHTML = `
   <h6 class="">${person.name}</h6>
-  <img src="${BACKDROP_BASE_URL + person.profile_path}" alt="${
-      person.name
-    } profile" width='150'>
+  <img src="${
+    person.profile_path
+      ? BACKDROP_BASE_URL + person.profile_path
+      : "./assets/person-default.jpg"
+  }" alt="${person.name} profile" >
      `;
     // should add link to actor profile: resDiv.addEventListener("click", () => {})
-    searchContainer.append(resDiv);
+    rowDiv.append(resDiv);
+    container.append(rowDiv);
+    CONTAINER.append(container);
   });
+  const rowDiv2 = document.createElement("div");
+  rowDiv2.setAttribute("class", "row");
   movies.forEach((movie) => {
     const resDiv = document.createElement("div");
-    resDiv.setAttribute("class", "col-md-6");
+    resDiv.setAttribute("class", "single-item col-sm-12 col-md-6 col-lg-4");
     resDiv.innerHTML = `
   <h6 class="">${movie.title}</h6>
-  <img src="${BACKDROP_BASE_URL + movie.backdrop_path}" alt="${
-      movie.title
-    } poster" width='150'>
+  <img src="${
+    movie.backdrop_path
+      ? BACKDROP_BASE_URL + movie.backdrop_path
+      : "./assets/default image.jpg"
+  }" alt="${movie.title} poster" >
      `;
-     resDiv.addEventListener("click", () => {
-    movieDetails(movie);})
-    searchContainer.append(resDiv);})
+
+    resDiv.addEventListener("click", () => {
+      movieDetails(movie);
+    });
+    rowDiv2.append(resDiv);
+    container.append(rowDiv2);
+    CONTAINER.innerHTML = "";
+    CONTAINER.append(container);
+  });
+
 };
 //END search function:******//
 //****filter function */
@@ -340,17 +376,27 @@ const renderMovie = (movie, credits, related, trailerKey, images) => {
         <div class="col-sm-12 col-lg-8">
          
              <img id="movie-backdrop" src=${
-               BACKDROP_BASE_URL + images.backdrops[2].file_path
-             }>
+               BACKDROP_BASE_URL + images.backdrops[2]?.file_path
+             } style="${
+    images.backdrops[2]?.file_path ? "display:block" : "display:none"
+  }">
       
 
            
         </div>
-        <div  class="movie-detail col-sm-12  col-lg-4">
+        <div  class="${
+          images.backdrops[2]?.file_path
+            ? "movie-detail col-sm-12  col-lg-4"
+            : "movie-detail col-12"
+        } ">
             
-        <img id="movie-backdrop" class="mb-4" src=${
-          BACKDROP_BASE_URL + images.logos[0].file_path
-        }>
+
+        <img  style="${
+          images.backdrops[2]?.file_path ? "display:block" : "display:none"
+        }" id="movie-backdrop" class="mb-4" src=${
+    BACKDROP_BASE_URL + images.logos[1]?.file_path
+  }>
+
 <div>
 <p  id="movie-release-date"><i class="fa-solid fa-calendar-days"></i> ${
     movie.release_date
@@ -412,7 +458,10 @@ const renderMovie = (movie, credits, related, trailerKey, images) => {
   companies.forEach((com) => {
     const company = document.getElementById("movie-production-company");
     let li = document.createElement("li");
-    li.innerHTML = `${com[0]} <img  src="${PROFILE_BASE_URL}${com[1]}" alt="" height="18">`;
+
+    com[0] || com[1]
+      ? (li.innerHTML = `${com[0]} <img  src="${PROFILE_BASE_URL}${com[1]}" alt="" height="18">`)
+      : null;
     company.append(li);
   });
 
