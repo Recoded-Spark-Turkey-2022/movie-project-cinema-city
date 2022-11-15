@@ -31,6 +31,8 @@ const movieDetails = async (movie) => {
   const related = await fetchRelatedMovies(movie.id);
   const trailer = await fetchTrailer(movie.id);
   const images = await fetchImages(movie.id);
+
+
   renderMovie(
     movieRes,
     credits,
@@ -38,6 +40,7 @@ const movieDetails = async (movie) => {
     trailer,
     images
   );
+
 };
 
 // This function is to fetch movies. You may need to add it or change some part in it in order to apply some of the features.
@@ -180,10 +183,11 @@ actorBtn.addEventListener("click", (e) => {
 
       actorDiv.innerHTML = `
 
+
       <div class="card mb-4" style="height:38em;">
       <img src="${BACKDROP_BASE_URL + actorBlock.profile_path}" alt="${
-            actorBlock.name
-          } actor">
+              actorBlock.name
+            } actor">
       <div class="card-body">
   
       <h3 class="card-title text-black">${actorBlock.name}</h3>
@@ -197,31 +201,31 @@ actorBtn.addEventListener("click", (e) => {
       </div>
     </div>`;
 
-      actorDiv.addEventListener("click", async() => {
-          const fetchedActorMovies = await fetchActorsMovies(actorBlock.id)
-          CONTAINER.innerHTML= ""
-           renderMovies( fetchedActorMovies.cast ) ;
-      });
-      rowDiv.append(actorDiv);
-      CONTAINER.appendChild(rowDiv);
-     }
-    })
-  }
-})
-
-})
-
+            actorDiv.addEventListener("click", async () => {
+              const fetchedActorMovies = await fetchActorsMovies(actorBlock.id);
+              CONTAINER.innerHTML = "";
+              renderMovies(fetchedActorMovies.cast);
+            });
+            rowDiv.append(actorDiv);
+            CONTAINER.appendChild(rowDiv);
+          }
+        });
+      }
+    });
+});
 
 // render related movies:
 const renderRelatedMovies = (movies) => {
   movies.map((movie) => {
     const relatedDiv = document.getElementById("relatedmovies");
     const movieDiv = document.createElement("div");
-    movieDiv.setAttribute("class", "col");
+    movieDiv.setAttribute("class", "col-2 related-movie");
     movieDiv.innerHTML = `
-        <img src="${BACKDROP_BASE_URL + movie.backdrop_path}" alt="${
-      movie.title
-    } poster" width='150'>
+        <img src="${
+          movie.backdrop_path
+            ? BACKDROP_BASE_URL + movie?.backdrop_path
+            : "./assets/default image.jpg"
+        }" alt="${movie.title} poster" width='150'>
         <h6>${movie.title}</h6>`;
     movieDiv.addEventListener("click", () => {
       movieDetails(movie);
@@ -238,7 +242,9 @@ const fetchSearchResults = async (searchWord, i) => {
   const searchRes = await res.json();
   const movieRes = searchRes.results.filter((e) => e.media_type === "movie");
   const personRes = searchRes.results.filter((e) => e.media_type === "person");
+
   renderSearch(movieRes, personRes,searchWord);
+
 };
 //search event listener:
 let searchWord;
@@ -246,7 +252,9 @@ const searchBar = document.getElementById("search-bar");
 searchBar.addEventListener("submit", (e) => {
   e.preventDefault();
   searchWord = e.target[0].value;
+
   e.target[0].value='';
+
   fetchSearchResults(searchWord);
 });
 //
@@ -328,13 +336,13 @@ const renderNewSearch = (movies, persons, container) => {
     CONTAINER.innerHTML = "";
     CONTAINER.append(container);
   });
-
 };
 //END search function:******//
 //****filter function */
 const filterSection = document.querySelector(".filter");
 const filterFunc = async (e) => {
   if (e.target.value === "latest") {
+
     var today =new Date().toJSON().slice(0,10).replace(/-/g,'-');
     const url = `${constructUrl(
       "discover/movie"
@@ -342,34 +350,38 @@ const filterFunc = async (e) => {
     const res = await fetch(url);
     const movies = await res.json();  
 
+
     CONTAINER.innerHTML = "";
     renderMovies(movies.results);
-  return }
-     const url=constructUrl(`movie/${e.target.value}`);
-     const res = await fetch(url);
-     const movies=await res.json();
-     CONTAINER.innerHTML = "";
-     renderMovies(movies.results);
-
-    }
-filterSection.addEventListener('click',filterFunc);
-
+    return;
+  }
+  const url = constructUrl(`movie/${e.target.value}`);
+  const res = await fetch(url);
+  const movies = await res.json();
+  CONTAINER.innerHTML = "";
+  renderMovies(movies.results);
+};
+filterSection.addEventListener("click", filterFunc);
 
 // You'll need to play with this function in order to add features and enhance the style.
 const renderMovie = (movie, credits, related, trailer, images) => {
   // actors:
   const fiveAcrtors = [];
+
  if (credits.cast.length!=0) {
   for (let i = 0; i <= 4; i++) {
     fiveAcrtors.push(` ${credits.cast[i].name}`);
   }
  }
   
+
   //directors:
   let director = credits.crew.filter((person) => {
     return person.job === "Director";
   });
+
   if (director.length!=0){director=director[0].name}
+
   //companies:
   const companies = movie.production_companies.map((company) => [
     company.name,
@@ -397,11 +409,17 @@ const renderMovie = (movie, credits, related, trailer, images) => {
         } ">
             
 
-        <img  style="${
-          images.backdrops[2]?.file_path ? "display:block" : "display:none"
-        }" id="movie-backdrop" class="mb-4" src=${
-    BACKDROP_BASE_URL + images.logos[1]?.file_path
-  }>
+ ${
+   images.logos[1]?.file_path
+     ? `<img  style="${
+         images.backdrops[2]?.file_path ? "display:block" : "display:none"
+       }" id="movie-backdrop" class="mb-4" src=${
+         BACKDROP_BASE_URL + images.logos[1]?.file_path
+       }>`
+     : movie.title
+ }      
+ 
+ 
 
 <div>
 <p  id="movie-release-date"><i class="fa-solid fa-calendar-days"></i> ${
@@ -470,6 +488,7 @@ const renderMovie = (movie, credits, related, trailer, images) => {
 
   renderRelatedMovies(related);
   //trailer
+
   const trailerSection=document.getElementById('trailer');
   let trailerKey;
   if (trailer.results.length!=0){
