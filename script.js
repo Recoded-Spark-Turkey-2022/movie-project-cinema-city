@@ -147,7 +147,58 @@ const renderMovies = (movies) => {
   });
 };
 
+// fetch actors movies
+const fetchActorsMovies = async (person_id) => {
+  const url = constructUrl(`person/${person_id}/movie_credits`);
+  const res = await fetch(url);
+  return res.json();
+};
+
+
 //******Rendering ActorDetailspage */
+actorBtn.addEventListener('click',(e)=>{
+  e.preventDefault()
+  CONTAINER.innerHTML = ``;
+  
+  const url = constructUrl(`person/popular`);
+  fetch(url)
+  .then(res =>res.json())
+  .then(data => {
+  const rowDiv = document.createElement("div");
+  rowDiv.setAttribute("class", "row");
+  // console.log(actorsList)
+  if(data.results)
+  {
+    data.results.map((actorBlock) => {
+      const actorDiv = document.createElement("div");
+      actorDiv.setAttribute("class", "col-sm-12 col-md-6 col-lg-3")
+
+      actorDiv.innerHTML = `
+      <div class="card mb-4" style="height:38em;">
+      <img src="${BACKDROP_BASE_URL + actorBlock.profile_path}" alt="${
+        actorBlock.name
+      } actor">
+      <div class="card-body">
+  
+      <h3 class="card-title text-black">${actorBlock.name}</h3>
+        <div class="mt-3 text-start">Gender: <b>${(actorBlock.gender === 1) ? "Female":"Male"}</b> </div>
+        <div class="mt-3 text-start">Popularity: <b>${actorBlock.popularity}</b></div>
+
+      </div>
+    </div>`;
+      actorDiv.addEventListener("click", async() => {
+          const fetchedActorMovies = await fetchActorsMovies(actorBlock.id)
+          CONTAINER.innerHTML= ""
+           renderMovies( fetchedActorMovies.cast ) ;
+      });
+      rowDiv.append(actorDiv);
+      CONTAINER.appendChild(rowDiv);
+  
+    })
+  }
+})
+
+})
 
 // render related movies:
 const renderRelatedMovies = (movies) => {
