@@ -35,7 +35,7 @@ const movieDetails = async (movie) => {
     movieRes,
     credits,
     related.results,
-    trailer?.results[0].key,
+    trailer,
     images
   );
 };
@@ -170,7 +170,6 @@ actorBtn.addEventListener("click", (e) => {
   .then(data => {
   const rowDiv = document.createElement("div");
   rowDiv.setAttribute("class", "row");
-  // console.log(actorsList)
   if(data.results)
   {
     data.results.map((actorBlock) => {
@@ -239,7 +238,7 @@ const fetchSearchResults = async (searchWord, i) => {
   const searchRes = await res.json();
   const movieRes = searchRes.results.filter((e) => e.media_type === "movie");
   const personRes = searchRes.results.filter((e) => e.media_type === "person");
-  renderSearch(movieRes, personRes);
+  renderSearch(movieRes, personRes,searchWord);
 };
 //search event listener:
 let searchWord;
@@ -247,10 +246,10 @@ const searchBar = document.getElementById("search-bar");
 searchBar.addEventListener("submit", (e) => {
   e.preventDefault();
   searchWord = e.target[0].value;
+  e.target[0].value='';
   fetchSearchResults(searchWord);
 });
 //
-
 const renderSearch = (movies, persons) => {
   const searchContainer = document.createElement("div");
   const searchHeader = document.createElement("h2");
@@ -333,13 +332,16 @@ const renderNewSearch = (movies, persons, container) => {
 };
 //END search function:******//
 //****filter function */
-const filterSection=document.querySelector('.filter');
-const filterFunc= async  (e) => {
-  if (e.target.value==='latest'){
-    const url=`${constructUrl('discover/movie')}&sort_by=primary_release_date.desc&primary_release_year=2022`;
-    console.log(url)
+const filterSection = document.querySelector(".filter");
+const filterFunc = async (e) => {
+  if (e.target.value === "latest") {
+    var today =new Date().toJSON().slice(0,10).replace(/-/g,'-');
+    const url = `${constructUrl(
+      "discover/movie"
+    )}&sort_by=primary_release_date.desc&primary_release_date.lte=${today}&page=1`;
     const res = await fetch(url);
-    const movies=await res.json();
+    const movies = await res.json();  
+
     CONTAINER.innerHTML = "";
     renderMovies(movies.results);
   return }
@@ -354,13 +356,15 @@ filterSection.addEventListener('click',filterFunc);
 
 
 // You'll need to play with this function in order to add features and enhance the style.
-const renderMovie = (movie, credits, related, trailerKey, images) => {
+const renderMovie = (movie, credits, related, trailer, images) => {
   // actors:
-
   const fiveAcrtors = [];
+ if (credits.cast.length!=0) {
   for (let i = 0; i <= 4; i++) {
     fiveAcrtors.push(` ${credits.cast[i].name}`);
   }
+ }
+  
   //directors:
   const director = credits.crew.filter((person) => {
     return person.job === "Director";
@@ -370,6 +374,7 @@ const renderMovie = (movie, credits, related, trailerKey, images) => {
     company.name,
     company.logo_path,
   ]);
+
 
   CONTAINER.innerHTML = `
     <div class="row">
@@ -444,9 +449,6 @@ const renderMovie = (movie, credits, related, trailerKey, images) => {
           <p> <b>Production companies:</b><ul id="movie-production-company"></ul></p>
         </div>
         <div class="col-12" id='trailer'>
-            <iframe id="ytplayer" type="text/html" width="100%" height="360"
-            src="https://www.youtube.com/embed/${trailerKey}?autoplay=1"
-            frameborder="0"></iframe>
         </div>
         <div >
             <h3>related movies:</h3>
@@ -466,6 +468,16 @@ const renderMovie = (movie, credits, related, trailerKey, images) => {
   });
 
   renderRelatedMovies(related);
+  //trailer
+  const trailerSection=document.getElementById('trailer');
+  let trailerKey;
+  if (trailer.results.length!=0){
+    trailerSection.innerHTML=`<iframe id="ytplayer" type="text/html" width="100%" height="360"
+    src="https://www.youtube.com/embed/${trailer.results[0].key}?autoplay=1"
+    frameborder="0"></iframe>`
+  }
+  
+
 };
 
 document.addEventListener("DOMContentLoaded", autorun);
