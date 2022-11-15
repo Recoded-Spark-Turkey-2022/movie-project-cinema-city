@@ -238,31 +238,34 @@ const renderNewSearch = (movies, persons) => {
       movie.title
     } poster" width='150'>
      `;
-     resDiv.addEventListener("click", () => {
-    movieDetails(movie);})
-    searchContainer.append(resDiv);})
+    resDiv.addEventListener("click", () => {
+      movieDetails(movie);
+    });
+    searchContainer.append(resDiv);
+  });
 };
 //END search function:******//
 //****filter function */
-const filterSection=document.querySelector('.filter');
-const filterFunc= async  (e) => {
-  if (e.target.value==='latest'){
-    const url=`${constructUrl('discover/movie')}&sort_by=primary_release_date.desc&primary_release_year=2022`;
-    console.log(url)
+const filterSection = document.querySelector(".filter");
+const filterFunc = async (e) => {
+  if (e.target.value === "latest") {
+    const url = `${constructUrl(
+      "discover/movie"
+    )}&sort_by=primary_release_date.desc&primary_release_year=2022`;
+
     const res = await fetch(url);
-    const movies=await res.json();
+    const movies = await res.json();
     CONTAINER.innerHTML = "";
     renderMovies(movies.results);
-  return }
-     const url=constructUrl(`movie/${e.target.value}`);
-     const res = await fetch(url);
-     const movies=await res.json();
-     CONTAINER.innerHTML = "";
-     renderMovies(movies.results);
-
-    }
-filterSection.addEventListener('click',filterFunc);
-
+    return;
+  }
+  const url = constructUrl(`movie/${e.target.value}`);
+  const res = await fetch(url);
+  const movies = await res.json();
+  CONTAINER.innerHTML = "";
+  renderMovies(movies.results);
+};
+filterSection.addEventListener("click", filterFunc);
 
 // You'll need to play with this function in order to add features and enhance the style.
 const renderMovie = (movie, credits, related, trailerKey, images) => {
@@ -296,7 +299,7 @@ const renderMovie = (movie, credits, related, trailerKey, images) => {
         <div  class="movie-detail col-sm-12  col-lg-4">
             
         <img id="movie-backdrop" class="mb-4" src=${
-          BACKDROP_BASE_URL + images.logos[0].file_path
+          BACKDROP_BASE_URL + images.logos[0]?.file_path
         }>
 <div>
 <p  id="movie-release-date"><i class="fa-solid fa-calendar-days"></i> ${
