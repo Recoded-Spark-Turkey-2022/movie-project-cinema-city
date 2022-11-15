@@ -226,7 +226,7 @@ const fetchSearchResults = async (searchWord, i) => {
   const searchRes = await res.json();
   const movieRes = searchRes.results.filter((e) => e.media_type === "movie");
   const personRes = searchRes.results.filter((e) => e.media_type === "person");
-  renderSearch(movieRes, personRes);
+  renderSearch(movieRes, personRes,searchWord);
 };
 //search event listener:
 let searchWord;
@@ -234,14 +234,15 @@ const searchBar = document.getElementById("search-bar");
 searchBar.addEventListener("submit", (e) => {
   e.preventDefault();
   searchWord = e.target[0].value;
+  e.target[0].value='';
   fetchSearchResults(searchWord);
 });
 //
 
-const renderSearch = (movies, persons) => {
+const renderSearch = (movies, persons,searchWord) => {
   CONTAINER.innerHTML = `
 <div class='row' id='search-container'>
-<h2> Search Results:</h2>`;
+<h2> Results for: ${searchWord}</h2>`;
   const searchContainer = document.getElementById("search-container");
 
   const next = document.createElement("button");
@@ -305,7 +306,7 @@ const filterFunc = async (e) => {
     )}&sort_by=primary_release_date.desc&primary_release_year=2022`;
 
     const res = await fetch(url);
-    const movies = await res.json();
+    const movies = await res.json();  
     CONTAINER.innerHTML = "";
     renderMovies(movies.results);
     return;
