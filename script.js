@@ -31,13 +31,7 @@ const movieDetails = async (movie) => {
   const related = await fetchRelatedMovies(movie.id);
   const trailer = await fetchTrailer(movie.id);
   const images = await fetchImages(movie.id);
-  renderMovie(
-    movieRes,
-    credits,
-    related.results,
-    trailer?.results[0].key,
-    images
-  );
+  renderMovie(movieRes, credits, related.results, trailer, images);
 };
 
 // This function is to fetch movies. You may need to add it or change some part in it in order to apply some of the features.
@@ -236,7 +230,7 @@ const fetchSearchResults = async (searchWord, i) => {
   const searchRes = await res.json();
   const movieRes = searchRes.results.filter((e) => e.media_type === "movie");
   const personRes = searchRes.results.filter((e) => e.media_type === "person");
-  renderSearch(movieRes, personRes);
+  renderSearch(movieRes, personRes, searchWord);
 };
 //search event listener:
 let searchWord;
@@ -244,10 +238,10 @@ const searchBar = document.getElementById("search-bar");
 searchBar.addEventListener("submit", (e) => {
   e.preventDefault();
   searchWord = e.target[0].value;
+  e.target[0].value = "";
   fetchSearchResults(searchWord);
 });
 //
-
 const renderSearch = (movies, persons) => {
   const searchContainer = document.createElement("div");
   const searchHeader = document.createElement("h2");
@@ -351,17 +345,22 @@ const filterFunc = async (e) => {
 filterSection.addEventListener("click", filterFunc);
 
 // You'll need to play with this function in order to add features and enhance the style.
-const renderMovie = (movie, credits, related, trailerKey, images) => {
+const renderMovie = (movie, credits, related, trailer, images) => {
   // actors:
-
   const fiveAcrtors = [];
-  for (let i = 0; i <= 4; i++) {
-    fiveAcrtors.push(` ${credits.cast[i].name}`);
+  if (credits.cast.length != 0) {
+    for (let i = 0; i <= 4; i++) {
+      fiveAcrtors.push(` ${credits.cast[i].name}`);
+    }
   }
+
   //directors:
-  const director = credits.crew.filter((person) => {
+  let director = credits.crew.filter((person) => {
     return person.job === "Director";
   });
+  if (director.length != 0) {
+    director = director[0].name;
+  }
   //companies:
   const companies = movie.production_companies.map((company) => [
     company.name,
@@ -443,13 +442,10 @@ const renderMovie = (movie, credits, related, trailerKey, images) => {
           <p> ${fiveAcrtors}</p>
         </ul>
         <h5>Director:</h5>
-          <p> ${director[0].name}</p>
+          <p> ${director}</p>
           <p> <b>Production companies:</b><ul id="movie-production-company"></ul></p>
         </div>
         <div class="col-12" id='trailer'>
-            <iframe id="ytplayer" type="text/html" width="100%" height="360"
-            src="https://www.youtube.com/embed/${trailerKey}?autoplay=1"
-            frameborder="0"></iframe>
         </div>
         <div >
             <h3>related movies:</h3>
@@ -469,6 +465,14 @@ const renderMovie = (movie, credits, related, trailerKey, images) => {
   });
 
   renderRelatedMovies(related);
+  //trailer
+  const trailerSection = document.getElementById("trailer");
+  let trailerKey;
+  if (trailer.results.length != 0) {
+    trailerSection.innerHTML = `<iframe id="ytplayer" type="text/html" width="100%" height="360"
+    src="https://www.youtube.com/embed/${trailer.results[0].key}?autoplay=1"
+    frameborder="0"></iframe>`;
+  }
 };
 
 document.addEventListener("DOMContentLoaded", autorun);
