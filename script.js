@@ -301,10 +301,11 @@ const renderNewSearch = (movies, persons) => {
 const filterSection = document.querySelector(".filter");
 const filterFunc = async (e) => {
   if (e.target.value === "latest") {
+    var today =new Date().toJSON().slice(0,10).replace(/-/g,'-');
     const url = `${constructUrl(
       "discover/movie"
-    )}&sort_by=primary_release_date.desc&primary_release_year=2022`;
-
+    )}&sort_by=primary_release_date.desc&primary_release_date.lte=${today}&page=1`;
+console.log(today)
     const res = await fetch(url);
     const movies = await res.json();  
     CONTAINER.innerHTML = "";
@@ -316,6 +317,7 @@ const filterFunc = async (e) => {
   const movies = await res.json();
   CONTAINER.innerHTML = "";
   renderMovies(movies.results);
+  console.log(url)
 };
 filterSection.addEventListener("click", filterFunc);
 
