@@ -366,9 +366,10 @@ const renderMovie = (movie, credits, related, trailer, images) => {
  }
   
   //directors:
-  const director = credits.crew.filter((person) => {
+  let director = credits.crew.filter((person) => {
     return person.job === "Director";
   });
+  if (director.length!=0){director=director[0].name}
   //companies:
   const companies = movie.production_companies.map((company) => [
     company.name,
@@ -445,7 +446,7 @@ const renderMovie = (movie, credits, related, trailer, images) => {
           <p> ${fiveAcrtors}</p>
         </ul>
         <h5>Director:</h5>
-          <p> ${director[0].name}</p>
+          <p> ${director}</p>
           <p> <b>Production companies:</b><ul id="movie-production-company"></ul></p>
         </div>
         <div class="col-12" id='trailer'>
