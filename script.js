@@ -370,6 +370,7 @@ const renderMovie = (movie, credits, related, trailer, images) => {
 
  if (credits.cast.length!=0) {
   for (let i = 0; i <= 4; i++) {
+    if (credits.cast[i])
     fiveAcrtors.push(` ${credits.cast[i].name}`);
   }
  }
