@@ -458,3 +458,114 @@ transition: filter 0.4s ease;
 .related-movie img{
   border-radius: 10px;
 }
+
+/*About Us*/
+
+.banner {
+  display: flex;
+  justify-content: center;
+}
+.ghost-icon {
+  display: inline;
+  margin: 0 2rem;
+  animation: rotateGhost 3s linear infinite;
+  font-size: 3rem;
+  color: #123258;
+}
+@keyframes rotateGhost {
+  0% {
+    transform: translateX(-20px);
+  }
+  25% {
+    transform: translateX(10px);
+  }
+  50% {
+    transform: translateX(30px);
+  }
+
+  100% {
+    transform: translateX(-20px);
+  }
+}
+.welcome-message {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.welcome-message h2 {
+  z-index: 50;
+  color: #737373;
+  font-weight: 700;
+  font-size: 3.5rem;
+}
+.home-logo {
+  transform: rotate(20deg);
+  animation: rotate 3s linear infinite;
+}
+@keyframes rotate {
+  0% {
+    transform: translateX(0px) rotate(20deg);
+  }
+  25% {
+    transform: translateX(10px) rotate(20deg);
+  }
+  50% {
+    transform: translateX(20px) rotate(20deg);
+  }
+
+  100% {
+    transform: translateX(0px) rotate(20deg);
+  }
+}
+.text-container{
+  color:#737373
+}
+.text-container p{
+  max-width: 40rem;
+  box-shadow:  0px 0px 6px 2px rgba(247, 244, 244, 0.9);
+padding:5px 15px;
+border-radius: 10px;
+margin-bottom: 40px;
+}
+.team-list{
+  list-style-type: none;
+  display: flex;
+  flex-direction: column;
+  color:#737373;
+  font-size: 2rem;
+  padding: 0;
+}
+.team-list h3{
+  font-size: 2.3rem;
+}
+.team-list i{
+  cursor: pointer;
+  filter: brightness(70%);
+  transition: all 0.4s ease-in-out;
+}
+.team-list i:hover{
+
+  filter: brightness(120%);
+}
+.team-list a{
+  color:#737373;
+}
+.information{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.8rem;
+  gap:2rem;
+  margin-top: 50px;
+}
+@media (max-width:990px) {
+  .information{
+      flex-direction: column;
+      width: 100%;
+     align-items: flex-start;
+  }
+  .text-container p{
+      max-width: 100% !important;
+
+  }
+}
