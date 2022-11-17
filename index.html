@@ -46,7 +46,11 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
           <ul class="navbar-nav nav-lists me-auto mb-2 mb-lg-0">
             <li class="nav-item">
-              <a class="nav-link actor-btn" aria-current="page" href="#"
+              <a
+                class="nav-link actor-btn"
+                aria-current="page"
+                id="actors-link"
+                href="#"
                 >Actors</a
               >
             </li>
@@ -55,6 +59,7 @@
               <a
                 class="nav-link dropdown-toggle"
                 href="#"
+                id="genre-link"
                 role="button"
                 data-bs-toggle="dropdown"
                 aria-expanded="false"
@@ -70,6 +75,7 @@
                 role="button"
                 data-bs-toggle="dropdown"
                 aria-expanded="false"
+                id="filter-link"
               >
                 Filter
               </a>
@@ -92,7 +98,9 @@
               </section>
             </li>
             <li class="nav-item">
-              <a class="aboutUs-btn nav-link" href="#"> About Us</a>
+              <a class="aboutUs-btn nav-link" id="aboutus-link" href="#">
+                About Us</a
+              >
             </li>
           </ul>
           <form id="search-bar" class="d-flex formBox" role="search">
@@ -102,6 +110,7 @@
               placeholder="Search"
               aria-label="Search"
               required
+              id="search-link"
             />
             <button class="form-btn" type="submit">Search</button>
           </form>
@@ -158,11 +167,11 @@
           <div class="col-xs-6 col-md-3">
             <h5>Categories</h5>
 
-            <li><a href="">Actors</a></li>
-            <li><a href="">Genres</a></li>
-            <li><a href="">Filter</a></li>
-            <li><a href="">About Us</a></li>
-            <li><a href="">Search</a></li>
+            <li><a href="#actors-link">Actors</a></li>
+            <li><a href="#genre-link">Genres</a></li>
+            <li><a href="#filter-link">Filter</a></li>
+            <li><a href="#aboutus-link">About Us</a></li>
+            <li><a href="#search-link">Search</a></li>
           </div>
         </div>
         <hr />
