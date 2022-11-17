@@ -563,7 +563,9 @@ function aboutUs() {
         </li>
         <li>
             <span>Mosab As</span>
+            <a href="https://www.linkedin.com/in/mosab-as/?originalSubdomain=tr" target="_blank">
             <i class="fa-brands fa-linkedin"></i>
+          </a></i>
             <a href="https://github.com/mosab-as" target="_blank">  <i class="fa-brands fa-github"></i> </a>
           
 
