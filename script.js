@@ -294,7 +294,7 @@ const renderNewSearch = (movies, persons, container) => {
   rowDiv.append(headerPerson);
   persons.forEach((person) => {
     const resDiv = document.createElement("div");
-    resDiv.setAttribute("class", "single-item col-sm-12 col-md-6 col-lg-4");
+    resDiv.setAttribute("class", "single-actor-item col-sm-6 col-md-4 col-lg-2");
     resDiv.innerHTML = `
   <h6 class="">${person.name}</h6>
   <img src="${
