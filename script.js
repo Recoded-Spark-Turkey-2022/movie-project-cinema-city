@@ -285,9 +285,13 @@ const renderSearch = (movies, persons) => {
 //render search
 const renderNewSearch = (movies, persons, container) => {
   // const searchContainer = document.getElementById("search-container");
-  console.log(container);
+
   const rowDiv = document.createElement("div");
   rowDiv.setAttribute("class", "row");
+  const headerPerson = document.createElement("h2");
+  headerPerson.innerText = "Person Results";
+  headerPerson.setAttribute("class", "person-header");
+  rowDiv.append(headerPerson);
   persons.forEach((person) => {
     const resDiv = document.createElement("div");
     resDiv.setAttribute("class", "single-item col-sm-12 col-md-6 col-lg-4");
@@ -299,13 +303,23 @@ const renderNewSearch = (movies, persons, container) => {
       : "./assets/person-default.jpg"
   }" alt="${person.name} profile" >
      `;
+
+    resDiv.addEventListener("click", async () => {
+      const fetchedActorMovies = await fetchActorsMovies(person.id);
+      CONTAINER.innerHTML = "";
+      renderMovies(fetchedActorMovies.cast);
+    });
     // should add link to actor profile: resDiv.addEventListener("click", () => {})
     rowDiv.append(resDiv);
     container.append(rowDiv);
     CONTAINER.append(container);
   });
   const rowDiv2 = document.createElement("div");
+  const headerMovie = document.createElement("h2");
+  headerMovie.innerText = "Movie Results";
+  headerMovie.setAttribute("class", "movie-header");
   rowDiv2.setAttribute("class", "row");
+  rowDiv2.append(headerMovie);
   movies.forEach((movie) => {
     const resDiv = document.createElement("div");
     resDiv.setAttribute("class", "single-item col-sm-12 col-md-6 col-lg-4");
@@ -404,7 +418,7 @@ const renderMovie = (movie, credits, related, trailer, images) => {
        }" id="movie-backdrop" class="mb-4" src=${
          BACKDROP_BASE_URL + images.logos[1]?.file_path
        }>`
-     : movie.title
+     : `<h2 class="fw-bold text-capitalize  mb-3 text-uppercase">${movie.title} </h2> `
  }      
  
  
@@ -556,8 +570,8 @@ function aboutUs() {
         </li>
         <li>
             <span>Samet Hozman</span>
-            <i class="fa-brands fa-linkedin"></i>
-          
+            <a href="https://www.linkedin.com/in/samethozman/" target="_blank"><i class="fa-brands fa-linkedin"></i></a>
+            
             <a href="https://github.com/samethozman" target="_blank"
             >  <i class="fa-brands fa-github"></i> </a
           >
