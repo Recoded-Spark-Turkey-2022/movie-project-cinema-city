@@ -264,6 +264,7 @@ outline: none !important;
 
 .card {
   border: solid 3px #FD6500;
+  transition: all 0.4s ease-in-out;
 }
 
 .card:hover{
@@ -278,6 +279,36 @@ outline: none !important;
   position: absolute;
   bottom: 0;
   right: 0;
+}
+@media (max-width:768px) {
+  .truncate-text {
+    position: relative;
+height:70px;
+    overflow: hidden;
+  }
+  
+  .card {
+    border: solid 3px #FD6500;
+    transition: all 0.4s ease-in-out;
+  }
+  
+  .card:hover{
+    transform: scale(1.08);
+    cursor: pointer;
+  }
+  .truncate-text::after {
+    content: "";
+    background: linear-gradient(to right, rgba(255,255,255,0) 0%, rgba(255,255,255,1) 100%);
+    width: 40%;
+    height: 1.7em;
+    position: absolute;
+    bottom: -9px;
+    right: -2px;
+  }
+  .text-end{
+    display: none;
+  }
+  
 }
 /* card text end*/
 
@@ -596,4 +627,18 @@ margin-bottom: 40px;
 
   border-bottom: 2px solid #737373 ;
 
+}
+
+/*Actors PAge*/
+.card-actor{
+  gap: 1rem;
+  height: 100% !important;
+
+}
+.card-actor img{
+ width: 100%;
+}
+@media (max-width:768px) {
+
+  
 }
