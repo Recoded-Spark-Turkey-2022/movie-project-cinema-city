@@ -337,7 +337,7 @@ height:70px;
 }
 
 
-#movie-release-date,#movie-runtime,#movie-language,#movie-rating,#movie-count{
+#movie-release-date,#movie-runtime,#movie-language,#movie-rating,#movie-count,.hover{
   position: relative;
   cursor: pointer;
   transition: all 0.4s ease;
@@ -355,6 +355,9 @@ display: block;
   display: block;
 }
 #movie-release-date:hover .popUp-info{
+  display: block;
+}
+.hover:hover .popUp-info{
   display: block;
 }
 #imdb-icon{
@@ -641,4 +644,8 @@ margin-bottom: 40px;
 @media (max-width:768px) {
 
   
+}
+#actor-image{
+  max-width: 300px;
+
 }
