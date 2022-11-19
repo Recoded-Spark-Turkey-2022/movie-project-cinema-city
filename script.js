@@ -153,6 +153,67 @@ const fetchActorsMovies = async (person_id) => {
   return res.json();
 };
 
+// fetch actor details
+const fetchActorDetails = async (person_id)=>{
+  const url = constructUrl(`/person/${person_id}`)
+  const res = await fetch(url);
+  return res.json();
+}
+
+const renderActorDetailsPage = async (actor_data)=>{
+  return `
+          <div class="row">
+              <div class="col-sm-12 col-lg-3">
+              
+                  <img id="actor-image" src=${BACKDROP_BASE_URL + actor_data.profile_path} style="${actor_data.profile_path ? "display:block" : "display:none"}">
+
+              </div>
+              <div  class="${
+                actor_data.profile_path
+                  ? "movie-detail col-sm-12  col-lg-8"
+                  : "movie-detail col-12"
+              } ">                    
+      
+      <div>
+      <h1>${actor_data.name}</h1>
+      <br>
+      <p class="hover" id="place-of-birth"><i class="fa-solid fa-location-dot"></i> ${actor_data.place_of_birth}  
+      <span class="popUp-info">Place of Birth</span></p>
+
+      <p class="hover" id="birth-day"><i class="fa-solid fa-calendar-days"></i> ${actor_data.birthday} 
+      <span class="popUp-info">Birthday</span>
+      </p>
+      ${
+        actor_data.deathday?`
+        <p class="hover" id="death-day"><i class="fa-solid fa-tombstone-blank"></i> ${actor_data.deathday}
+        <span class="popUp-info">Died at</span></p>`:''
+      }
+      <p class="hover" id="popularity"><i class="fa-solid fa-fire"></i>${actor_data.popularity}
+      <span class="popUp-info">Popularity</span>
+      </p>
+
+
+
+      </div>
+                
+
+        <a id="imdb-icon" href="https://www.imdb.com/name/${actor_data.imdb_id}"  target="_blank"> <i class="fa-brands fa-imdb"></i></a>
+                  
+  
+        </div>
+
+        <h4 class="mt-4 mb-2">Biography:</h3>
+        <p id="biography">
+        ${actor_data.biography}
+        </p>
+
+        <div class="col-12 mt-4 mb-4">
+        <h3>Movies Credits:</h3>
+        </div>
+
+            </div>`;
+}
+
 //******Rendering ActorDetailspage */
 actorBtn.addEventListener("click", (e) => {
   e.preventDefault();
@@ -195,8 +256,14 @@ actorBtn.addEventListener("click", (e) => {
 
             actorDiv.addEventListener("click", async () => {
               const fetchedActorMovies = await fetchActorsMovies(actorBlock.id);
+              const fetchedActorDetails = await fetchActorDetails(actorBlock.id);
+
               CONTAINER.innerHTML = "";
+              
               renderMovies(fetchedActorMovies.cast);
+              const renderedPage = document.createElement('div')
+              renderedPage.innerHTML = await renderActorDetailsPage(fetchedActorDetails)
+              CONTAINER.prepend(renderedPage)
             });
             rowDiv.append(actorDiv);
             CONTAINER.appendChild(rowDiv);
@@ -306,9 +373,16 @@ const renderNewSearch = (movies, persons, container) => {
      `;
 
     resDiv.addEventListener("click", async () => {
-      const fetchedActorMovies = await fetchActorsMovies(person.id);
-      CONTAINER.innerHTML = "";
-      renderMovies(fetchedActorMovies.cast);
+
+              const fetchedActorMovies = await fetchActorsMovies(person.id);
+              const fetchedActorDetails = await fetchActorDetails(person.id);
+
+              CONTAINER.innerHTML = "";
+              
+              renderMovies(fetchedActorMovies.cast);
+              const renderedPage = document.createElement('div')
+              renderedPage.innerHTML = await renderActorDetailsPage(fetchedActorDetails)
+              CONTAINER.prepend(renderedPage)
     });
     // should add link to actor profile: resDiv.addEventListener("click", () => {})
     rowDiv.append(resDiv);
@@ -397,9 +471,10 @@ const renderMovie = (movie, credits, related, trailer, images) => {
         <div class="col-sm-12 col-lg-8">
          
              <img id="movie-backdrop" src=${
-               BACKDROP_BASE_URL + images.backdrops[2]?.file_path
+              images.backdrops[2] ? 
+               BACKDROP_BASE_URL + images.backdrops[2]?.file_path:BACKDROP_BASE_URL+movie.backdrop_path
              } style="${
-    images.backdrops[2]?.file_path ? "display:block" : "display:none"
+    images.backdrops[2]?.file_path ? "display:block" : movie.backdrop_path ? movie.backdrop_path: "display:none"
   }">
       
 
@@ -408,7 +483,7 @@ const renderMovie = (movie, credits, related, trailer, images) => {
         <div  class="${
           images.backdrops[2]?.file_path
             ? "movie-detail col-sm-12  col-lg-4"
-            : "movie-detail col-12"
+            : movie.backdrop_path ? "movie-detail col-sm-12  col-lg-4":"movie-detail col-12"
         } ">
             
 
