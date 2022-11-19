@@ -82,8 +82,6 @@ fetchGenreList();
 //upcoming=> upcoming
 //now playing=> now_playing
 
-//******Search Actor */
-
 // Don't touch this function please. This function is to fetch one movie.
 const fetchMovie = async (movieId) => {
   const url = constructUrl(`movie/${movieId}`);
@@ -165,17 +163,20 @@ actorBtn.addEventListener("click", (e) => {
     .then((res) => res.json())
     .then((data) => {
       const rowDiv = document.createElement("div");
-      rowDiv.setAttribute("class", "row");
+      rowDiv.setAttribute("class", "row actors-row");
       if (data.results) {
         data.results.map((actorBlock) => {
           if (actorBlock.known_for.length > 0) {
             const actorDiv = document.createElement("div");
-            actorDiv.setAttribute("class", "col-sm-12 col-md-6 col-lg-3");
+            actorDiv.setAttribute(
+              "class",
+              "single-actor col-sm-12 col-md-6 col-lg-3 mb-5"
+            );
 
             actorDiv.innerHTML = `
 
 
-      <div class="card mb-4" style="height:38em;">
+      <div class="card card-actor mb-4" style="height:38em;">
       <img src="${BACKDROP_BASE_URL + actorBlock.profile_path}" alt="${
               actorBlock.name
             } actor">
@@ -563,11 +564,10 @@ function aboutUs() {
         </li>
         <li>
             <span>Mosab As</span>
-            <a href="https://www.linkedin.com/in/mosab-as/?originalSubdomain=tr" target="_blank">
-            <i class="fa-brands fa-linkedin"></i>
-          </a></i>
-            <a href="https://github.com/mosab-as" target="_blank">  <i class="fa-brands fa-github"></i> </a>
-          
+       
+          <a href="https://www.linkedin.com/in/mosab-as/" target="_blank"><i class="fa-brands fa-linkedin"></i></a>
+          <a href="https://www.linkedin.com/in/samethozman/" target="_blank"><i class="fa-brands fa-linkedin"></i></a>
+        
 
         </li>
         <li>
